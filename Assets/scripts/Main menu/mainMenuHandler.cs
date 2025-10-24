@@ -17,10 +17,16 @@ public class mainMenuHandler : MonoBehaviour
     public GameObject lockerMenu;
     public GameObject mute;
     public GameObject unmute;
-    
 
+    public playerColorStorage colorData;
 
     public AudioSource audio;
+
+    private float noDelay = 0f;
+
+    private string blueHex = "#0000FF";
+    private string greenHex = "#00FF00";
+    private string redHex = "#FF0000";
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -57,7 +63,7 @@ public class mainMenuHandler : MonoBehaviour
 
     public void onOptionsPress()
     {
-        StartCoroutine(openOptions(0f));
+        StartCoroutine(openOptions(noDelay));
     }
 
     IEnumerator openOptions(float delayTime)
@@ -71,7 +77,7 @@ public class mainMenuHandler : MonoBehaviour
 
     public void onReturnPress()
     {
-        StartCoroutine(returnToHome(0f));
+        StartCoroutine(returnToHome(noDelay));
     }
 
     IEnumerator returnToHome(float delayTime)
@@ -85,7 +91,7 @@ public class mainMenuHandler : MonoBehaviour
 
     public void onMutePress()
     {
-        StartCoroutine(muteAction(0f));
+        StartCoroutine(muteAction(noDelay));
      
     }
 
@@ -99,7 +105,7 @@ public class mainMenuHandler : MonoBehaviour
 
     public void onUnmutePress()
     {
-        StartCoroutine(unmuteAction(0f));
+        StartCoroutine(unmuteAction(noDelay));
     }
 
     IEnumerator unmuteAction(float delayTime)
@@ -112,7 +118,7 @@ public class mainMenuHandler : MonoBehaviour
 
     public void onLockerPress()
     {
-        StartCoroutine(lockerAction(0f));
+        StartCoroutine(lockerAction(noDelay));
 
     }
 
@@ -122,6 +128,54 @@ public class mainMenuHandler : MonoBehaviour
         homeMenu.SetActive(false);
         optionsMenu.SetActive(false);
         lockerMenu.SetActive(true);
+    }
+
+    public void bluePress()
+    {
+        StartCoroutine(blueAction(noDelay));
+
+    }
+
+    IEnumerator blueAction(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        if (colorData != null)
+        {
+            colorData.hexValue = blueHex;
+            Debug.Log("ColorData hex changed to: " + blueHex);
+        }
+    }
+
+    public void greenPress()
+    {
+        StartCoroutine(greenAction(noDelay));
+
+    }
+
+    IEnumerator greenAction(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        if (colorData != null)
+        {
+            colorData.hexValue = greenHex;
+            Debug.Log("ColorData hex changed to: " + greenHex);
+        }
+    }
+
+    public void redPress()
+    {
+        StartCoroutine(redAction(noDelay));
+
+    }
+
+    IEnumerator redAction(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        if (colorData != null)
+        {
+            colorData.hexValue = redHex;
+            Debug.Log("ColorData hex changed to: " + redHex);
+        }
     }
 
 

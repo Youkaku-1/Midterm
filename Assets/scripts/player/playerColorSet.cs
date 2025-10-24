@@ -8,6 +8,7 @@ public class playerColorSet : MonoBehaviour
     void Start()
     {
         GetComponent<Renderer>().material.color = colorData.GetColor();
+        Debug.Log("color changed");
     }
 }
     
