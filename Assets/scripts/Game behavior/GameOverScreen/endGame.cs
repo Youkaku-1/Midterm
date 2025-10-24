@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameOverScreen : MonoBehaviour
 {
+    public GameObject gameUI;
     public TextMeshProUGUI Points;
 
 
@@ -16,6 +17,7 @@ public class GameOverScreen : MonoBehaviour
 
     public void Setup(int score)
     {
+        gameUI.SetActive(false);
         gameObject.SetActive(true);
         Points.text = "Score: "+score.ToString();
 
@@ -25,6 +27,13 @@ public class GameOverScreen : MonoBehaviour
     {
         Debug.Log("restarted");
         SceneManager.LoadScene("Level1");
+
+    }
+
+    public void mainMenu()
+    {
+        Debug.Log("Switched scene");
+        SceneManager.LoadScene("Main menu");
 
     }
 }
