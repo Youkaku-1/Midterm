@@ -90,5 +90,19 @@ public class playermovemnt : MonoBehaviour
 
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            // Decrease coin count by 1
+            coin--;
+
+            // Update UI
+            coinText.text = "Coin: " + coin.ToString();
+
+            Debug.Log("Hit by enemy! Coins: " + coin);
+        }
+    }
+
 }
 
