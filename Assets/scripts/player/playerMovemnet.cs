@@ -12,7 +12,6 @@ public class playermovemnt : MonoBehaviour
     private float movementX;
     private float movementY;
 
-    
 
     //Coin counter
     public int coin = 0;
@@ -51,7 +50,7 @@ public class playermovemnt : MonoBehaviour
     {
         if (other.gameObject.CompareTag("coin"))
         {
-
+            ParticleSystem PS  = other.gameObject.GetComponent<ParticleSystem>();
             Renderer rend = other.gameObject.GetComponent<Renderer>();
             if (rend != null)
             {
@@ -77,9 +76,14 @@ public class playermovemnt : MonoBehaviour
             {
                 Debug.LogWarning("Coin object has no Renderer to get colour from!");
             }
+            if (PS != null)
+            {
+                PS.Play();
+                Debug.Log("played particals");
+            }
 
-            // Update UI and play sound & disable coin
-            coinText.text = "Coin: " + coin.ToString();
+                // Update UI and play sound & disable coin
+                coinText.text = "Coin: " + coin.ToString();
             other.gameObject.SetActive(false);
             audioSource.Play();
         }
