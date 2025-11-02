@@ -1,7 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor.SceneManagement;
 using UnityEngine.SceneManagement;
 
 public class GameOverScreen : MonoBehaviour
@@ -27,6 +26,13 @@ public class GameOverScreen : MonoBehaviour
     {
         Debug.Log("restarted");
         SceneManager.LoadScene("Level1");
+
+    }
+
+    public void nextLevel()
+    {
+        Debug.Log("Advanced to the next level");
+        SceneManager.LoadScene("Level2");
 
     }
 

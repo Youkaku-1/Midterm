@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,6 +14,7 @@ public class mainMenuHandler : MonoBehaviour
     public GameObject homeMenu;
     public GameObject optionsMenu;
     public GameObject lockerMenu;
+    public GameObject levelsMenu;
     public GameObject mute;
     public GameObject unmute;
 
@@ -49,16 +49,20 @@ public class mainMenuHandler : MonoBehaviour
         #endif
     }
 
-    public void onPlayPressed()
+    public void onLevel1Pressed()
     {
-        StartCoroutine(StartGameAfterDelay(1f));
+        StartCoroutine(StartGameAfterDelay(1f, "Level1"));
+    }
+    public void onLevel2Pressed()
+    {
+        StartCoroutine(StartGameAfterDelay(1f, "Level2"));
     }
 
-    IEnumerator StartGameAfterDelay(float delayTime)
+    IEnumerator StartGameAfterDelay(float delayTime, string scene)
     {
         yield return new WaitForSeconds(delayTime);
         Debug.Log("started");
-        SceneManager.LoadScene("Level1");
+        SceneManager.LoadScene(scene);
     }
 
     public void onOptionsPress()
@@ -72,6 +76,7 @@ public class mainMenuHandler : MonoBehaviour
         homeMenu.SetActive(false);
         optionsMenu.SetActive(true);
         lockerMenu.SetActive(false);
+        levelsMenu.SetActive(false);
         Debug.Log("options pressed");
     }
 
@@ -86,6 +91,7 @@ public class mainMenuHandler : MonoBehaviour
         homeMenu.SetActive(true);
         optionsMenu.SetActive(false);
         lockerMenu.SetActive(false);
+        levelsMenu.SetActive(false);
         Debug.Log("return pressed");
     }
 
@@ -128,6 +134,7 @@ public class mainMenuHandler : MonoBehaviour
         homeMenu.SetActive(false);
         optionsMenu.SetActive(false);
         lockerMenu.SetActive(true);
+        levelsMenu.SetActive(false);
     }
 
     public void bluePress()
@@ -178,7 +185,20 @@ public class mainMenuHandler : MonoBehaviour
         }
     }
 
+    public void onLevelsPress()
+    {
+        StartCoroutine(levelsAction(noDelay));
 
+    }
+
+    IEnumerator levelsAction(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+        homeMenu.SetActive(false);
+        optionsMenu.SetActive(false);
+        lockerMenu.SetActive(false);
+        levelsMenu.SetActive(true);
+    }
 
 
     public void PlayAudio()
