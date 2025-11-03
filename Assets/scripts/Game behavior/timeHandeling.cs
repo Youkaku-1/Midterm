@@ -9,10 +9,13 @@ public class    CountdownTimer : MonoBehaviour
     public bool timerIsRunning = false;
 
     [Header("UI")]
-    public TextMeshProUGUI timeText;           // assign your TextMeshProUGUI component
+    public TextMeshProUGUI timeText;   // assign TextMeshProUGUI component
+    public GameOverScreen gameOver;    // gameover
 
-    // gameover
-    public GameOverScreen gameOver;
+    [Header("Player")]
+    public GameObject Player;
+    
+    
     // Reference to your player movement script
     public playermovemnt playerMovement;
 
@@ -51,6 +54,10 @@ public class    CountdownTimer : MonoBehaviour
     {
         int playerCoins = playerMovement.coin;
         gameOver.Setup(playerCoins);
+        if (Player != null)
+        {
+            Destroy(Player);
+        }
         audioSource.Play();
     }
 }

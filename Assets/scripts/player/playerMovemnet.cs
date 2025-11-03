@@ -7,31 +7,39 @@ using UnityEngine.InputSystem;
 
 public class playermovemnt : MonoBehaviour
 {
-    // Rigidbody of the player.
+    // ===== PLAYER MOVEMENT =====
+    [Header("Player Movement Settings")]
+    public float speed = 0;
     private Rigidbody rb;
-    // Movement along X and Y axes.
     private float movementX;
     private float movementY;
 
-    //Coin counter
+    // ===== COIN SYSTEM =====
+    [Header("Coin Amount")]
     public int coin = 0;
     public TextMeshProUGUI coinText;
 
-    //audio
+    [Header("Coin settings")]
+    public float minTimeBetweenChanges = 5f;
+    public float maxTimeBetweenChanges = 15f;
+    public TextMeshProUGUI coinTypeText;
+    private Color currentCoinType = Color.yellow;
+    private Coroutine coinTypeCoroutine;
+
+    // ===== AUDIO =====
+    [Header("Audio")]
     private AudioSource audioSource;
 
-    // Speed at which the player moves.
-    public float speed = 0;
-
-    // Powerup references
+    // ===== POWER-UP SYSTEM =====
+    [Header("Power-up References")]
     private CountdownTimer timerScript;
     private ObstacleSpawner obstacleSpawner;
 
+    [Header("Power-up Settings")]
     public float speedBoost = 3f;
     public int speedBoostMultiplyer = 2;
     public float timeStop = 3f;
     public float disableObstacleSpawn = 3f;
-
 
     // Start is called before the first frame update.
     void Start()
@@ -43,6 +51,12 @@ public class playermovemnt : MonoBehaviour
         // Get references to other scripts
         timerScript = FindObjectOfType<CountdownTimer>();
         obstacleSpawner = FindObjectOfType<ObstacleSpawner>();
+
+        // Start the coin type changing routine
+        coinTypeCoroutine = StartCoroutine(ChangeCoinTypeRoutine());
+
+        // Initialize UI
+        UpdateCoinTypeUI();
     }
 
     // This function is called when a move input is detected.
@@ -70,34 +84,32 @@ public class playermovemnt : MonoBehaviour
         {
             ParticleSystem PS = other.gameObject.GetComponent<ParticleSystem>();
             Renderer rend = other.gameObject.GetComponent<Renderer>();
+
             if (rend != null)
             {
-                Color col = rend.material.color;
+                Color coinColor = rend.material.color;
 
-                // Using approximate checks because floating point values can vary
-                if (col == Color.red)
+                // Check if collected coin matches the current required type
+                if (ColorsAreSimilar(coinColor, currentCoinType))
                 {
-                    coin--;
-                }
-                else if (col == Color.yellow)
-                {
+                    // Correct coin type - increase coins
                     coin++;
                 }
                 else
                 {
-                    // Optional: coin has some unexpected colour
-                    // You could treat it as neutral or warn
-                    Debug.LogWarning("Coin colour not recognised: " + col);
+                    // Wrong coin type - decrease coins
+                    coin--;
                 }
             }
             else
             {
                 Debug.LogWarning("Coin object has no Renderer to get colour from!");
             }
+
             if (PS != null)
             {
                 PS.Play();
-                Debug.Log("played particals");
+                Debug.Log("played particles");
             }
 
             // Update UI and play sound & disable coin
@@ -111,6 +123,57 @@ public class playermovemnt : MonoBehaviour
         }
     }
 
+    // Helper method to compare colors (since direct == comparison can be problematic with Color)
+    private bool ColorsAreSimilar(Color a, Color b, float tolerance = 0.1f)
+    {
+        return Mathf.Abs(a.r - b.r) < tolerance &&
+               Mathf.Abs(a.g - b.g) < tolerance &&
+               Mathf.Abs(a.b - b.b) < tolerance;
+    }
+
+    IEnumerator ChangeCoinTypeRoutine()
+    {
+        while (true)
+        {
+            // Wait for random time between changes
+            float waitTime = Random.Range(minTimeBetweenChanges, maxTimeBetweenChanges);
+            yield return new WaitForSeconds(waitTime);
+
+            // Toggle between yellow and red
+            if (ColorsAreSimilar(currentCoinType, Color.yellow))
+            {
+                currentCoinType = Color.red;
+            }
+            else
+            {
+                currentCoinType = Color.yellow;
+            }
+
+            // Update UI
+            UpdateCoinTypeUI();
+
+            Debug.Log("Coin type changed to: " + (ColorsAreSimilar(currentCoinType, Color.yellow) ? "YELLOW" : "RED"));
+        }
+    }
+
+    void UpdateCoinTypeUI()
+    {
+        if (coinTypeText != null)
+        {
+            // Update text and color based on current coin type
+            if (ColorsAreSimilar(currentCoinType, Color.yellow))
+            {
+                coinTypeText.text = "Collect YELLOW Coins!";
+                coinTypeText.color = Color.yellow;
+            }
+            else
+            {
+                coinTypeText.text = "Collect RED Coins!";
+                coinTypeText.color = Color.red;
+            }
+        }
+    }
+
     void HandlePowerUp(Collider powerUp)
     {
         Renderer rend = powerUp.GetComponent<Renderer>();
@@ -119,19 +182,19 @@ public class playermovemnt : MonoBehaviour
             Color col = rend.material.color;
 
             // Green - Speed boost
-            if (col == Color.green)
+            if (ColorsAreSimilar(col, Color.green))
             {
                 StartCoroutine(SpeedBoost());
                 Debug.Log("Speed boost activated!");
             }
             // Pink - Time stop
-            else if (col == new Color(1f, 0.41f, 0.71f)) // Pink
+            else if (ColorsAreSimilar(col, new Color(1f, 0.41f, 0.71f))) // Pink
             {
                 StartCoroutine(TimeStop());
                 Debug.Log("Time stop activated!");
             }
             // Blue - Stop obstacles
-            else if (col == Color.blue)
+            else if (ColorsAreSimilar(col, Color.blue))
             {
                 StartCoroutine(StopObstacles());
                 Debug.Log("Obstacle stop activated!");
@@ -195,6 +258,15 @@ public class playermovemnt : MonoBehaviour
             coinText.text = "Coin: " + coin.ToString();
 
             Debug.Log("Hit by enemy! Coins: " + coin);
+        }
+    }
+
+    // Clean up coroutine when object is destroyed
+    void OnDestroy()
+    {
+        if (coinTypeCoroutine != null)
+        {
+            StopCoroutine(coinTypeCoroutine);
         }
     }
 }
