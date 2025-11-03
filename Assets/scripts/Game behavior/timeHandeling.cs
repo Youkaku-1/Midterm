@@ -47,7 +47,7 @@ public class    CountdownTimer : MonoBehaviour
     void UpdateTimeText()
     {
         int seconds = Mathf.FloorToInt(timeRemaining);
-        timeText.text = "Time: " + seconds.ToString();
+        timeText.text = " Time: " + seconds.ToString();
     }
 
     void OnTimerEnd()

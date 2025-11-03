@@ -22,24 +22,26 @@ public class GameOverScreen : MonoBehaviour
 
     }
 
-    public void restart()
+    public void loadLevel1()
     {
-        Debug.Log("restarted");
+        Debug.Log("loadScene1");
         SceneManager.LoadScene("Level1");
 
     }
 
-    public void nextLevel()
+    public void loadLevel2()
     {
-        Debug.Log("Advanced to the next level");
+        Debug.Log("loadScene2");
         SceneManager.LoadScene("Level2");
 
     }
 
-    public void mainMenu()
+    public void loadMainMenu()
     {
-        Debug.Log("Switched scene");
+        Debug.Log("Switched to mainmenu");
         SceneManager.LoadScene("Main menu");
 
     }
+
+
 }

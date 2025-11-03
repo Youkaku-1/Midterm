@@ -113,7 +113,7 @@ public class playermovemnt : MonoBehaviour
             }
 
             // Update UI and play sound & disable coin
-            coinText.text = "Coin: " + coin.ToString();
+            coinText.text = " Coin: " + coin.ToString();
             other.gameObject.SetActive(false);
             audioSource.Play();
         }
@@ -163,12 +163,12 @@ public class playermovemnt : MonoBehaviour
             // Update text and color based on current coin type
             if (ColorsAreSimilar(currentCoinType, Color.yellow))
             {
-                coinTypeText.text = "Collect YELLOW Coins!";
+                coinTypeText.text = " Collect YELLOW Coins!";
                 coinTypeText.color = Color.yellow;
             }
             else
             {
-                coinTypeText.text = "Collect RED Coins!";
+                coinTypeText.text = " Collect RED Coins!";
                 coinTypeText.color = Color.red;
             }
         }
@@ -255,7 +255,7 @@ public class playermovemnt : MonoBehaviour
             coin--;
 
             // Update UI
-            coinText.text = "Coin: " + coin.ToString();
+            coinText.text = " Coin: " + coin.ToString();
 
             Debug.Log("Hit by enemy! Coins: " + coin);
         }
