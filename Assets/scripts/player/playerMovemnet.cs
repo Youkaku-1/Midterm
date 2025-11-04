@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -25,15 +23,17 @@ public class playermovemnt : MonoBehaviour
     public TextMeshProUGUI coinTypeText;
     private Color currentCoinType = Color.yellow;
     private Coroutine coinTypeCoroutine;
+    public int coinMult = 10;
 
     // ===== AUDIO =====
     [Header("Audio")]
     private AudioSource audioSource;
 
     // ===== POWER-UP SYSTEM =====
-    [Header("Power-up References")]
-    private CountdownTimer timerScript;
-    private ObstacleSpawner obstacleSpawner;
+    [Header("Power-up References (assign the prefab assets here)")]
+    public GameObject speedBoostPrefab;
+    public GameObject timeStopPrefab;
+    public GameObject stopObstaclesPrefab;
 
     [Header("Power-up Settings")]
     public float speedBoost = 3f;
@@ -41,40 +41,31 @@ public class playermovemnt : MonoBehaviour
     public float timeStop = 3f;
     public float disableObstacleSpawn = 3f;
 
-    // Start is called before the first frame update.
+    // References to other scripts
+    private CountdownTimer timerScript;
+    private ObstacleSpawner obstacleSpawner;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        // Get and store the Rigidbody component attached to the player.
         rb = GetComponent<Rigidbody>();
-
-        // Get references to other scripts
         timerScript = FindObjectOfType<CountdownTimer>();
         obstacleSpawner = FindObjectOfType<ObstacleSpawner>();
 
-        // Start the coin type changing routine
         coinTypeCoroutine = StartCoroutine(ChangeCoinTypeRoutine());
-
-        // Initialize UI
         UpdateCoinTypeUI();
     }
 
-    // This function is called when a move input is detected.
     void OnMove(InputValue movementValue)
     {
-        // Convert the input value into a Vector2 for movement.
         Vector2 movementVector = movementValue.Get<Vector2>();
-        // Store the X and Y components of the movement.
         movementX = movementVector.x;
         movementY = movementVector.y;
     }
 
-    // FixedUpdate is called once per fixed frame-rate frame.
     private void FixedUpdate()
     {
-        // Create a 3D movement vector using the X and Y inputs.
         Vector3 movement = new Vector3(movementX, 0.0f, movementY);
-        // Apply force to the Rigidbody to move the player.
         rb.AddForce(movement * speed);
     }
 
@@ -82,45 +73,83 @@ public class playermovemnt : MonoBehaviour
     {
         if (other.gameObject.CompareTag("coin"))
         {
-            ParticleSystem PS = other.gameObject.GetComponent<ParticleSystem>();
-            Renderer rend = other.gameObject.GetComponent<Renderer>();
-
-            if (rend != null)
-            {
-                Color coinColor = rend.material.color;
-
-                // Check if collected coin matches the current required type
-                if (ColorsAreSimilar(coinColor, currentCoinType))
-                {
-                    // Correct coin type - increase coins
-                    coin++;
-                }
-                else
-                {
-                    // Wrong coin type - decrease coins
-                    coin--;
-                }
-            }
-            else
-            {
-                Debug.LogWarning("Coin object has no Renderer to get colour from!");
-            }
-
-            if (PS != null)
-            {
-                PS.Play();
-                Debug.Log("played particles");
-            }
-
-            // Update UI and play sound & disable coin
-            coinText.text = " Coin: " + coin.ToString();
-            other.gameObject.SetActive(false);
-            audioSource.Play();
+            HandleCoinTrigger(other);
         }
         else if (other.gameObject.CompareTag("powerUp"))
         {
             HandlePowerUp(other);
         }
+    }
+
+    private void HandleCoinTrigger(Collider other)
+    {
+        ParticleSystem PS = other.gameObject.GetComponent<ParticleSystem>();
+        Renderer rend = other.gameObject.GetComponent<Renderer>();
+
+        if (rend != null)
+        {
+            Color coinColor = rend.material.color;
+
+            if (ColorsAreSimilar(coinColor, currentCoinType))
+            {
+                coin += coinMult;
+            }
+            else
+            {
+                coin -= coinMult;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Coin object has no Renderer to get colour from!");
+        }
+
+        if (PS != null) PS.Play();
+
+        coinText.text = " Coin: " + coin.ToString();
+        other.gameObject.SetActive(false);
+        if (audioSource != null) audioSource.Play();
+    }
+
+    // Simple name-based prefab matching (works with instantiated prefabs -> "PrefabName(Clone)")
+    void HandlePowerUp(Collider powerUpCollider)
+    {
+        GameObject go = powerUpCollider.gameObject;
+        string goName = go.name;
+
+        bool matched = false;
+
+        if (speedBoostPrefab != null && goName.StartsWith(speedBoostPrefab.name))
+        {
+            StartCoroutine(SpeedBoost());
+            Debug.Log("Speed boost activated!");
+            matched = true;
+        }
+        else if (timeStopPrefab != null && goName.StartsWith(timeStopPrefab.name))
+        {
+            StartCoroutine(TimeStop());
+            Debug.Log("Time stop activated!");
+            matched = true;
+        }
+        else if (stopObstaclesPrefab != null && goName.StartsWith(stopObstaclesPrefab.name))
+        {
+            StartCoroutine(StopObstacles());
+            Debug.Log("Obstacle stop activated!");
+            matched = true;
+        }
+
+        if (!matched)
+        {
+            Debug.LogWarning("PowerUp collided but did not match any assigned prefab: " + goName);
+        }
+
+        // Play particles if available
+        ParticleSystem PS = go.GetComponent<ParticleSystem>();
+        if (PS != null) PS.Play();
+
+        // Disable the powerup object
+        go.SetActive(false);
+        if (audioSource != null) audioSource.Play();
     }
 
     // Helper method to compare colors (since direct == comparison can be problematic with Color)
@@ -135,11 +164,9 @@ public class playermovemnt : MonoBehaviour
     {
         while (true)
         {
-            // Wait for random time between changes
             float waitTime = Random.Range(minTimeBetweenChanges, maxTimeBetweenChanges);
             yield return new WaitForSeconds(waitTime);
 
-            // Toggle between yellow and red
             if (ColorsAreSimilar(currentCoinType, Color.yellow))
             {
                 currentCoinType = Color.red;
@@ -149,9 +176,7 @@ public class playermovemnt : MonoBehaviour
                 currentCoinType = Color.yellow;
             }
 
-            // Update UI
             UpdateCoinTypeUI();
-
             Debug.Log("Coin type changed to: " + (ColorsAreSimilar(currentCoinType, Color.yellow) ? "YELLOW" : "RED"));
         }
     }
@@ -160,7 +185,6 @@ public class playermovemnt : MonoBehaviour
     {
         if (coinTypeText != null)
         {
-            // Update text and color based on current coin type
             if (ColorsAreSimilar(currentCoinType, Color.yellow))
             {
                 coinTypeText.text = " Collect YELLOW Coins!";
@@ -174,64 +198,25 @@ public class playermovemnt : MonoBehaviour
         }
     }
 
-    void HandlePowerUp(Collider powerUp)
-    {
-        Renderer rend = powerUp.GetComponent<Renderer>();
-        if (rend != null)
-        {
-            Color col = rend.material.color;
-
-            // Green - Speed boost
-            if (ColorsAreSimilar(col, Color.green))
-            {
-                StartCoroutine(SpeedBoost());
-                Debug.Log("Speed boost activated!");
-            }
-            // Pink - Time stop
-            else if (ColorsAreSimilar(col, new Color(1f, 0.41f, 0.71f))) // Pink
-            {
-                StartCoroutine(TimeStop());
-                Debug.Log("Time stop activated!");
-            }
-            // Blue - Stop obstacles
-            else if (ColorsAreSimilar(col, Color.blue))
-            {
-                StartCoroutine(StopObstacles());
-                Debug.Log("Obstacle stop activated!");
-            }
-        }
-
-        // Play particles if available
-        ParticleSystem PS = powerUp.GetComponent<ParticleSystem>();
-        if (PS != null)
-        {
-            PS.Play();
-        }
-
-        // Disable the powerup
-        powerUp.gameObject.SetActive(false);
-        audioSource.Play();
-    }
-
     IEnumerator SpeedBoost()
     {
         float originalSpeed = speed;
-        speed *= speedBoostMultiplyer; // Double the speed
+        speed *= speedBoostMultiplyer;
 
-        yield return new WaitForSeconds(speedBoost); // Boost lasts 3 seconds
+        yield return new WaitForSeconds(speedBoost);
 
-        speed = originalSpeed; // Return to normal speed
+        speed = originalSpeed;
     }
 
     IEnumerator TimeStop()
     {
         if (timerScript != null)
         {
-            timerScript.timerIsRunning = false; // Stop the timer
+            timerScript.timerIsRunning = false;
 
-            yield return new WaitForSeconds(timeStop); // Time stopped for 2 seconds
+            yield return new WaitForSeconds(timeStop);
 
-            timerScript.timerIsRunning = true; // Resume the timer
+            timerScript.timerIsRunning = true;
         }
     }
 
@@ -239,11 +224,11 @@ public class playermovemnt : MonoBehaviour
     {
         if (obstacleSpawner != null)
         {
-            obstacleSpawner.enabled = false; // Disable obstacle spawning
+            obstacleSpawner.enabled = false;
 
-            yield return new WaitForSeconds(disableObstacleSpawn); // Stop obstacles for 4 seconds
+            yield return new WaitForSeconds(disableObstacleSpawn);
 
-            obstacleSpawner.enabled = true; // Enable obstacle spawning again
+            obstacleSpawner.enabled = true;
         }
     }
 
@@ -251,17 +236,13 @@ public class playermovemnt : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            // Decrease coin count by 1
-            coin--;
-
-            // Update UI
+            coin -= coinMult;
             coinText.text = " Coin: " + coin.ToString();
 
             Debug.Log("Hit by enemy! Coins: " + coin);
         }
     }
 
-    // Clean up coroutine when object is destroyed
     void OnDestroy()
     {
         if (coinTypeCoroutine != null)

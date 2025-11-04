@@ -164,7 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f71245b873741449b2321a7e251b04f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinSpawner
-  coinPrefab: {fileID: 7789280134494962592, guid: 54d256306bf9f594d942477f9cdb3954, type: 3}
+  coinPrefab: {fileID: 7566212799181116158, guid: 0786de5e58425d74ab88f4e0c662c483, type: 3}
   yPosition: 1
   xMin: -5
   xMax: 14
@@ -184,7 +184,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb562c805aeb9004e8074a1b6994952e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerupSpawner
-  powerupPrefab: {fileID: 8694074015912469148, guid: 326e593650f8cdf4c8d8c2a6dde81a3d, type: 3}
+  powerupPrefabs:
+  - {fileID: 6291098529710807451, guid: 8465dd0add77b004f8f4c8d12c01750a, type: 3}
+  - {fileID: 4071638861287386760, guid: d73a279bc02a0ef43ad0059ee327577f, type: 3}
+  - {fileID: 749986945485338964, guid: f7283216b0499d5419c80ede037198a3, type: 3}
   yPosition: 1
   xMin: -5
   xMax: 14
@@ -192,6 +195,7 @@ MonoBehaviour:
   zMax: 3
   maxPowerups: 2
   spawnInterval: 2
+  prefabWeights: []
 --- !u!114 &127457972 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4800083092707844479, guid: d246c2c1000bfd14381670c69cc1857b, type: 3}
@@ -941,7 +945,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f008c3143924dae4f928e0899bc3b282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleCountdownTimer
-  timeRemaining: 10
+  timeRemaining: 60
   timerIsRunning: 0
   timeText: {fileID: 708458059}
   gameOver: {fileID: 127457972}
@@ -1577,6 +1581,18 @@ PrefabInstance:
       propertyPath: coinTypeText
       value: 
       objectReference: {fileID: 180480041}
+    - target: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
+      propertyPath: timeStopPrefab
+      value: 
+      objectReference: {fileID: 6291098529710807451, guid: 8465dd0add77b004f8f4c8d12c01750a, type: 3}
+    - target: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
+      propertyPath: speedBoostPrefab
+      value: 
+      objectReference: {fileID: 749986945485338964, guid: f7283216b0499d5419c80ede037198a3, type: 3}
+    - target: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
+      propertyPath: stopObstaclesPrefab
+      value: 
+      objectReference: {fileID: 4071638861287386760, guid: d73a279bc02a0ef43ad0059ee327577f, type: 3}
     - target: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
       propertyPath: minTimeBetweenChanges
       value: 14

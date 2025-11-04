@@ -3,9 +3,12 @@ using System.Collections.Generic;
 
 public class PowerupSpawner : MonoBehaviour
 {
-    [Header("Prefab & spawn settings")]
-    public GameObject powerupPrefab;     // assign your "Powerup" prefab in Inspector
-    public float yPosition = 1f;         // fixed Y for all powerups
+    [Header("Prefabs & spawn settings")]
+    [Tooltip("Assign one prefab per power-up type.")]
+    public GameObject[] powerupPrefabs;   // assign different powerup prefabs in inspector
+
+    [Header("Spawn area")]
+    public float yPosition = 1f;          // fixed Y for all powerups
     public float xMin = -10f;
     public float xMax = 10f;
     public float zMin = -10f;
@@ -13,29 +16,39 @@ public class PowerupSpawner : MonoBehaviour
 
     [Header("Spawn control")]
     public int maxPowerups = 4;
-    public float spawnInterval = 2f;     // seconds between spawn attempts
+    public float spawnInterval = 2f;      // seconds between spawn attempts
+
+    // Optional probabilities for each prefab (must be same length as powerupPrefabs)
+    [Header("Optional: spawn weights")]
+    public float[] prefabWeights;
 
     private List<GameObject> spawnedPowerups = new List<GameObject>();
     private float timer = 0f;
 
     void Start()
     {
-        // Optionally spawn initial batch at start
+        if (powerupPrefabs == null || powerupPrefabs.Length == 0)
+        {
+            Debug.LogError("PowerupSpawner: No powerupPrefabs assigned!");
+            enabled = false;
+            return;
+        }
+
         SpawnBatch();
     }
 
     void Update()
     {
-        // Clean up null (destroyed) entries from list
+        // Clean up destroyed or inactive entries
         spawnedPowerups.RemoveAll(item => item == null || !item.activeInHierarchy);
 
-        // If list is empty (all powerups destroyed) then spawn a new batch
+        // If all powerups are gone, spawn a new batch
         if (spawnedPowerups.Count == 0)
         {
             SpawnBatch();
         }
 
-        // (Optional) You can still keep the interval logic if you want staggered spawn rather than all at once.
+        // Timer logic for staggered spawns
         timer += Time.deltaTime;
         if (timer >= spawnInterval)
         {
@@ -50,48 +63,51 @@ public class PowerupSpawner : MonoBehaviour
     void SpawnBatch()
     {
         for (int i = 0; i < maxPowerups; i++)
-        {
             SpawnPowerup();
-        }
     }
 
     void SpawnPowerup()
     {
-        // Determine random position
+        int prefabIndex = ChoosePrefabIndex();
+        GameObject prefab = powerupPrefabs[prefabIndex];
+
+        if (prefab == null)
+        {
+            Debug.LogWarning("PowerupSpawner: Prefab at index " + prefabIndex + " is null.");
+            return;
+        }
+
+        // Random position
         float x = Random.Range(xMin, xMax);
         float z = Random.Range(zMin, zMax);
         Vector3 pos = new Vector3(x, yPosition, z);
 
-        // Instantiate the prefab
-        GameObject powerup = Instantiate(powerupPrefab, pos, Quaternion.identity);
+        // Spawn it
+        GameObject powerup = Instantiate(prefab, pos, Quaternion.identity);
+        spawnedPowerups.Add(powerup);
+    }
 
-        // Set random color between green, blue and pink
-        Renderer rend = powerup.GetComponent<Renderer>();
-        if (rend != null)
+    int ChoosePrefabIndex()
+    {
+        if (prefabWeights != null && prefabWeights.Length == powerupPrefabs.Length)
         {
-            // Choose randomly between 0, 1, 2 for three colors
-            int colorChoice = Random.Range(0, 3);
-            rend.material = new Material(rend.material);
+            float total = 0f;
+            for (int i = 0; i < prefabWeights.Length; i++)
+                total += Mathf.Max(0f, prefabWeights[i]);
 
-            switch (colorChoice)
+            if (total > 0f)
             {
-                case 0:
-                    rend.material.color = Color.green;
-                    break;
-                case 1:
-                    rend.material.color = Color.blue;
-                    break;
-                case 2:
-                    rend.material.color = new Color(1f, 0.41f, 0.71f); // Pink
-                    break;
+                float r = Random.Range(0f, total);
+                float accum = 0f;
+                for (int i = 0; i < prefabWeights.Length; i++)
+                {
+                    accum += Mathf.Max(0f, prefabWeights[i]);
+                    if (r <= accum) return i;
+                }
             }
         }
-        else
-        {
-            Debug.LogWarning("Powerup prefab has no Renderer component to set color!");
-        }
 
-        // Add to list
-        spawnedPowerups.Add(powerup);
+        // fallback: uniform random
+        return Random.Range(0, powerupPrefabs.Length);
     }
 }

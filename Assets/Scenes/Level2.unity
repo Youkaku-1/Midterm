@@ -400,7 +400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f71245b873741449b2321a7e251b04f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CoinSpawner
-  coinPrefab: {fileID: 7789280134494962592, guid: 54d256306bf9f594d942477f9cdb3954, type: 3}
+  coinPrefab: {fileID: 7566212799181116158, guid: 0786de5e58425d74ab88f4e0c662c483, type: 3}
   yPosition: 1
   xMin: -5
   xMax: 14
@@ -3086,7 +3086,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.033333335
+  m_VoxelSize: 0.016666668
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: c56985217dbc7b942b86641ac7d97b75, type: 2}
   m_BuildHeightMesh: 0
