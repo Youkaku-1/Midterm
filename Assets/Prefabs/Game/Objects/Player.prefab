@@ -17,6 +17,10 @@ GameObject:
   - component: {fileID: 236743327469392520}
   - component: {fileID: 1773391165031751101}
   - component: {fileID: -5708364514979137667}
+  - component: {fileID: 5737336125688792399}
+  - component: {fileID: 4768773390827253365}
+  - component: {fileID: 3592169413418373189}
+  - component: {fileID: 1296716853592423703}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -32,13 +36,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5359754794375823187}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.040445495, y: -0.047036383, z: 0.0018893891, w: -0.99807227}
+  m_LocalRotation: {x: 0.04044518, y: 0.047032308, z: -0.0018885126, w: 0.9980725}
   m_LocalPosition: {x: 3.8371768, y: 0.73716784, z: -6.637461}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 4.641, y: 5.396, z: 0.002}
 --- !u!33 &3417944320194893273
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -155,8 +159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f31b1426689a8c409e723414a8e4ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playermovemnt
-  coin: 0
-  coinText: {fileID: 0}
   speed: 5
 --- !u!114 &236743327469392520
 MonoBehaviour:
@@ -298,3 +300,67 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::playerColorSet
   colorData: {fileID: 11400000, guid: b1fc638f3bd596f488e7506c4b3a6cba, type: 2}
+--- !u!114 &5737336125688792399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359754794375823187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc19a749258b3740bcc8c86f59681cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinSystem
+  coin: 0
+  coinText: {fileID: 0}
+  minTimeBetweenChanges: 5
+  maxTimeBetweenChanges: 15
+  coinTypeText: {fileID: 0}
+  coinMult: 10
+--- !u!114 &4768773390827253365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359754794375823187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c059dd41e4b025c41aa068d9517b0b54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCollisionHandler
+--- !u!114 &3592169413418373189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359754794375823187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d51df192a23c0d479702a47f819d34d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMaterialController
+  redMaterial: {fileID: 2100000, guid: c5e3168e886ea724fb0b830fd1fef280, type: 2}
+  greenMaterial: {fileID: 2100000, guid: be554eb7e24934e4dac1df1c005364e2, type: 2}
+  blueMaterial: {fileID: 2100000, guid: 070e1f75c983689449a43c667eaa8bb4, type: 2}
+--- !u!114 &1296716853592423703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359754794375823187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b16701513df323242862aafa3ae4e7c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PowerUpSystem
+  speedBoostPrefab: {fileID: 749986945485338964, guid: f7283216b0499d5419c80ede037198a3, type: 3}
+  timeStopPrefab: {fileID: 6291098529710807451, guid: 8465dd0add77b004f8f4c8d12c01750a, type: 3}
+  stopObstaclesPrefab: {fileID: 4071638861287386760, guid: d73a279bc02a0ef43ad0059ee327577f, type: 3}
+  speedBoostDuration: 3
+  speedBoostMultiplier: 2
+  timeStopDuration: 3
+  disableObstacleSpawnDuration: 3

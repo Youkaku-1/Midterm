@@ -16,8 +16,8 @@ public class    CountdownTimer : MonoBehaviour
     public GameObject Player;
     
     
-    // Reference to your player movement script
-    public playermovemnt playerMovement;
+ 
+    public CoinSystem coinSystem;
 
     private AudioSource audioSource;
     void Start()
@@ -52,7 +52,7 @@ public class    CountdownTimer : MonoBehaviour
 
     void OnTimerEnd()
     {
-        int playerCoins = playerMovement.coin;
+        int playerCoins = coinSystem.coin;
         gameOver.Setup(playerCoins);
         if (Player != null)
         {

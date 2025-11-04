@@ -4,9 +4,12 @@ using System.Collections;
 
 public class enemyMovement : MonoBehaviour
 {
-    public Transform playerTransform;
-    private NavMeshAgent agent;
-    private bool isStopped = false;
+    public Transform playerTransform; // Reference to the player
+    private NavMeshAgent agent;       // Controls pathfinding
+    private bool isStopped = false;   // Whether the enemy is stopped
+
+    // Rotation speed for facing the player
+    public float rotationSpeed = 5f;
 
     void Start()
     {
@@ -15,9 +18,13 @@ public class enemyMovement : MonoBehaviour
 
     void Update()
     {
-        if (!isStopped)
+        if (!isStopped && playerTransform != null)
         {
+            // Move toward the player
             agent.SetDestination(playerTransform.position);
+
+            // Make the enemy face the player smoothly
+            FacePlayer();
         }
     }
 
@@ -31,7 +38,7 @@ public class enemyMovement : MonoBehaviour
 
     IEnumerator StopAndResume()
     {
-        // Stop the enemy
+        // Stop the enemy movement
         isStopped = true;
         agent.isStopped = true;
 
@@ -41,5 +48,22 @@ public class enemyMovement : MonoBehaviour
         // Resume movement
         isStopped = false;
         agent.isStopped = false;
+    }
+
+    // Makes the enemy smoothly rotate to face the player
+    void FacePlayer()
+    {
+        // Direction to the player (ignore y-axis to prevent tilting up/down)
+        Vector3 direction = (playerTransform.position - transform.position).normalized;
+        direction.y = 0f;
+
+        if (direction.magnitude > 0.1f)
+        {
+            // Compute the target rotation
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+
+            // Smoothly rotate toward the target
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        }
     }
 }

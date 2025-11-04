@@ -950,7 +950,7 @@ MonoBehaviour:
   timeText: {fileID: 708458059}
   gameOver: {fileID: 127457972}
   Player: {fileID: 1740198925}
-  playerMovement: {fileID: 1740198931}
+  coinSystem: {fileID: 1740198936}
 --- !u!4 &1026661167
 Transform:
   m_ObjectHideFlags: 0
@@ -1162,6 +1162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   playerTransform: {fileID: 1740198932}
+  rotationSpeed: 5
 --- !u!195 &1236855857
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1278,22 +1279,22 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5359754794375823187, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
   m_PrefabInstance: {fileID: 5986079131469742103}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1740198931 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
-  m_PrefabInstance: {fileID: 5986079131469742103}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1740198925}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f31b1426689a8c409e723414a8e4ae7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::playermovemnt
 --- !u!4 &1740198932 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6645905640364244703, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
   m_PrefabInstance: {fileID: 5986079131469742103}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1740198936 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5737336125688792399, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
+  m_PrefabInstance: {fileID: 5986079131469742103}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1740198925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bc19a749258b3740bcc8c86f59681cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinSystem
 --- !u!1 &1893151191
 GameObject:
   m_ObjectHideFlags: 0
@@ -1573,30 +1574,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
+    - target: {fileID: 5737336125688792399, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
       propertyPath: coinText
       value: 
       objectReference: {fileID: 2101534069}
-    - target: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
+    - target: {fileID: 5737336125688792399, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
       propertyPath: coinTypeText
       value: 
       objectReference: {fileID: 180480041}
-    - target: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
-      propertyPath: timeStopPrefab
-      value: 
-      objectReference: {fileID: 6291098529710807451, guid: 8465dd0add77b004f8f4c8d12c01750a, type: 3}
-    - target: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
-      propertyPath: speedBoostPrefab
-      value: 
-      objectReference: {fileID: 749986945485338964, guid: f7283216b0499d5419c80ede037198a3, type: 3}
-    - target: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
-      propertyPath: stopObstaclesPrefab
-      value: 
-      objectReference: {fileID: 4071638861287386760, guid: d73a279bc02a0ef43ad0059ee327577f, type: 3}
-    - target: {fileID: 5923153638369086684, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
-      propertyPath: minTimeBetweenChanges
-      value: 14
-      objectReference: {fileID: 0}
     - target: {fileID: 6645905640364244703, guid: a1b3c2578c819a34eab0180e74086bc5, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.8371768

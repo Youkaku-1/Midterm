@@ -5,7 +5,7 @@ public class playerColorSet : MonoBehaviour
 {
     public playerColorStorage colorData;
 
-    void Start()
+    void Awake()
     {
         GetComponent<Renderer>().material.color = colorData.GetColor();
         Debug.Log("color changed");
