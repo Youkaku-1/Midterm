@@ -19,6 +19,7 @@ public class PowerUpSystem : MonoBehaviour
     private ObstacleSpawner obstacleSpawner;
     private AudioSource audioSource;
 
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
