@@ -6,7 +6,9 @@ public class enemyMovement : MonoBehaviour
 {
     public Transform playerTransform; // Reference to the player
     private NavMeshAgent agent;       // Controls pathfinding
-    private bool isStopped = false;   // Whether the enemy is stopped
+    public bool isStopped = false;   // Whether the enemy is stopped
+    
+
 
     // Rotation speed for facing the player
     public float rotationSpeed = 5f;
@@ -14,6 +16,7 @@ public class enemyMovement : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+
     }
 
     void Update()
@@ -27,6 +30,8 @@ public class enemyMovement : MonoBehaviour
             FacePlayer();
         }
     }
+
+
 
     void OnCollisionEnter(Collision collision)
     {
